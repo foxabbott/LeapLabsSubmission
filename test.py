@@ -2,7 +2,32 @@ import torch
 from main import BasicPGD
 from PIL import Image
 
+"""
+Messy testing tools - ran out of time, would otherwise use Python's unittest framework
+"""
+
 def run_tests(num_images, target_index_list, epsilon=0.01, iterations=200):
+    """
+    Tests PGD code across multiple images and target classes.
+    
+    For each image-target pair:
+    1. Generates an adversarial example using PGD
+    2. Checks if the attack successfully fooled the model
+    3. Verifies if the perturbation stays within the epsilon bound
+    
+    Returns:
+        tuple: Contains two dictionaries:
+            1. success_dict: Records if attack succeeded
+            2. epsilon_bounded_dict: Records if perturbation stayed within epsilon bound
+            
+            Both have structure:
+            {
+                image_index: {
+                    target_class: bool
+                }
+            }
+    """
+
     success_dict = {}
     epsilon_bounded_dict = {}
     adv_dir = "adv_images"

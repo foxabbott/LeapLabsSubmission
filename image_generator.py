@@ -1,6 +1,5 @@
 import argparse
 import os
-import torch
 from torchvision import datasets, transforms
 from torchvision.transforms import ToPILImage
 

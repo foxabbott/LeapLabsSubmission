@@ -6,6 +6,18 @@ import os
 from PIL import Image
 
 class BasicPGD:
+    """
+    Basic implementation of projected gradient descent, with a couple of differences from the standard algorithm.
+
+        First, instead of adding the signed gradients to the image, I apply sigmoid and scale between -1 and 1. This 
+    makes more intuitive sense in my opinion, as we preserve the relative importance of different parameter directions.
+    
+        Second, I calculate the gradient by first calculating the loss as the difference in the softmax values for the 
+    maximum index and the target index. Intuitively, this steps us away from the current preferred region and towards
+    the target region of pixel space. 
+
+        PGD ensures that no individual pixel lies more than epsilon apart from its original value. It seems to work well.
+    """
     def __init__(self, device=None):
         self.device = device if device else ("cuda" if torch.cuda.is_available() else "cpu")
         self.model = models.resnet18(pretrained=True)
@@ -64,13 +76,15 @@ class BasicPGD:
 
             target_prob = torch.nn.functional.softmax(output, dim=1)[0, target_class].item()
             print(f"Iteration {i+1}: Probability of target class {target_class} = {target_prob}")
+            # print(f"Loss: {loss.detach().item()}")
 
             # Backward pass
             self.model.zero_grad()
             loss.backward()
 
             # Add adversarial noise
-            noise = epsilon * input_tensor.grad.sign()
+            # noise = epsilon * input_tensor.grad.sign()
+            noise = epsilon * (torch.sigmoid(input_tensor.grad) * 2 - 1) 
             input_tensor = input_tensor + noise
 
             # Clamp to normalized range
