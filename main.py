@@ -91,6 +91,11 @@ class BasicPGD:
         adversarial_image.save(output_path)
         print(f"Adv imaged saved to {output_path}...")
         
+        # Return True if successful; used for testing
+        if predicted_class == target:
+            return True
+        return False
+
 
 if __name__ == "__main__":
 
