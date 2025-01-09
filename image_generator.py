@@ -1,11 +1,17 @@
 import argparse
+import os
+import torch
 from torchvision import datasets, transforms
 from torchvision.transforms import ToPILImage
-import os
 
 def download_images(dataset_name="CIFAR10", num_images=10, output_dir="images"):
     """
     Download a specified number of images from CIFAR dataset, save as png files.
+
+    Args:
+        dataset_name (str): Name of the dataset
+        num_images (int): Number of images to download.
+        output_dir (str): Directory to save the images.
     """
 
     # Define transformations
@@ -18,6 +24,7 @@ def download_images(dataset_name="CIFAR10", num_images=10, output_dir="images"):
     if dataset_name == "CIFAR10":
         dataset = datasets.CIFAR10(root="./data", train=False, download=True, transform=transform)
     else:
+        # Raise error for now if not CIFAR10
         raise ValueError(f"Dataset {dataset_name} is not supported.")
 
     # Ensure output directory exists
