@@ -56,7 +56,11 @@ class BasicPGD:
                 print(f"Success after {i} PGD iterations")
                 break
 
-            loss = -torch.nn.CrossEntropyLoss()(output, target)
+            # Calculate loss: difference between loss for the current predicted class and the target class
+            # Idea: nudge the noise towards region where logits are lower for predicted class and higher for target class
+            loss_predicted = torch.nn.CrossEntropyLoss()(output, predicted_class)
+            loss_target = -torch.nn.CrossEntropyLoss()(output, target)
+            loss = loss_predicted + loss_target
 
             target_prob = torch.nn.functional.softmax(output, dim=1)[0, target_class].item()
             print(f"Iteration {i+1}: Probability of target class {target_class} = {target_prob}")
