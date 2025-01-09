@@ -7,7 +7,7 @@ from PIL import Image
 
 class BasicPGD:
     def __init__(self, device=None):
-        self.device = device
+        self.device = device if device else ("cuda" if torch.cuda.is_available() else "cpu")
         self.model = models.resnet18(pretrained=True)
         self.model.eval()
         
@@ -50,6 +50,11 @@ class BasicPGD:
             # Get the predicted class
             predicted_class = torch.argmax(output, dim=1)
             print(f"Iteration {i+1}: Predicted class is {predicted_class.item()}")
+
+            if predicted_class.item() == target:
+                # PGD terminates when the modal class is the target
+                print(f"Success after {i} PGD iterations")
+                break
 
             loss = -torch.nn.CrossEntropyLoss()(output, target)
 
@@ -94,7 +99,5 @@ if __name__ == "__main__":
 
     args = parser.parse_args()
 
-    device = "cuda" if torch.cuda.is_available() else "cpu"
-    generator = BasicPGD(device)
-
+    generator = BasicPGD()
     generator.generate(args.image_path, args.target_class, args.output_dir, args.epsilon, args.iterations)
