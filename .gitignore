@@ -1,6 +1,7 @@
 # Folders to ignore
 images/
 data/
+adv_images/
 
 # Python stuff
 __pycache__/
