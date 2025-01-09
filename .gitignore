@@ -1,3 +1,8 @@
+# Folders to ignore
+images/
+data/
+
+# Python stuff
 __pycache__/
 *.pyc
 *.pyo
