@@ -40,7 +40,7 @@ python main.py path/to/image.png target_class output_directory --epsilon 0.1 --i
 
 Parameters:
 - `path/to/image.png`: Path to the input image
-- `target_class`: The desired target class index (0-999 for ImageNet classes)
+- `target_class`: The desired target class index (0-999 for ImageNet classes, find the full list [here](https://gist.github.com/yrevar/942d3a0ac09ec9e5eb3a#file-imagenet1000_clsidx_to_labels-txt-L410))
 - `output_directory`: Directory where the adversarial image will be saved
 - `--epsilon`: Maximum perturbation strength (default: 0.01) (recommended: 0.1)
 - `--iterations`: Number of PGD iterations (default: 10) (recommended: 100)
